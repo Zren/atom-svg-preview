@@ -133,7 +133,7 @@ describe('SVG preview package', () => {
           waitsForPromise(() => atom.workspace.open())
           runs(() => svgEditor.setText("<svg></svg>"))
 
-          waitsFor(() => preview.html().indexOf("<svg></svg>") >= 0)
+          waitsFor(() => preview.find('.image-canvas').html().indexOf("<svg></svg>") >= 0)
           runs(() => {
             expect(previewPane.isActive()).toBe(true)
             expect(previewPane.getActiveItem()).not.toBe(preview)
@@ -149,13 +149,16 @@ describe('SVG preview package', () => {
           previewPane.splitRight({ copyActiveItem: true })
           previewPane.activate()
 
+          let didChange = false
+          preview.onDidChangeSvg(() => didChange = true)
+
           waitsForPromise(() => atom.workspace.open())
           runs(() => {
             editorPane.activate()
             return svgEditor.setText("<svg></svg>")
           })
 
-          waitsFor(() => preview.html().indexOf("<svg></svg>") >= 0)
+          waitsFor(() => didChange)
           runs(() => {
             expect(editorPane.isActive()).toBe(true)
             expect(previewPane.getActiveItem()).toBe(preview)
@@ -174,11 +177,11 @@ describe('SVG preview package', () => {
 
           waitsFor(() => didStopChangingHandler.callCount > 0)
           runs(() => {
-            expect(preview.html()).not.toContain('<svg foo="bar"></svg>')
+            expect(preview.find('.image-canvas').html()).not.toContain('<svg foo="bar"')
             atom.workspace.getActiveTextEditor().save()
           })
 
-          waitsFor(() => preview.html().indexOf('<svg foo="bar"></svg>') >= 0)
+          waitsFor(() => preview.find('.image-canvas').html().indexOf('<svg foo="bar"') >= 0)
         })
       })
     })

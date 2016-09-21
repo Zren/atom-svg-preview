@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.11.0
+- More consistent zooming behavior
+
 ## 0.10.0
 - Zoom buttons (@dirk-thomas)
 
